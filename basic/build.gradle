@@ -1,0 +1,30 @@
+project.group = 'sample.jax-rs'
+project.version = '1.0.0'
+
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'java'
+apply plugin: 'idea'
+
+configurations {
+    all {
+        transitive = true
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.apache.cxf:cxf-rt-frontend-jaxrs:2.7.17"
+    compile "org.springframework:spring-web:3.0.7.RELEASE"
+    compile "org.codehaus.jackson:jackson-jaxrs:1.8.6"
+    compile "javax.servlet:servlet-api:2.5"
+}
+
+httpPort = 8080
+stopPort = 9451
+stopKey = 'foo'
+
+

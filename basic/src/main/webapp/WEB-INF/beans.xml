@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~   WSO2 Inc. licenses this file to you under the Apache License,
+  ~   Version 2.0 (the "License"); you may not use this file except
+  ~   in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://cxf.apache.org/jaxrs
+http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+
+    <context:property-placeholder/>
+    <context:annotation-config/>
+
+    <bean id="users" class="sample.jaxrs.verbs.dao.UserRepository"/>
+    <bean id="exmap-users" class="sample.jaxrs.exmap.dao.UserRepository"/>
+    <bean id="page-users" class="sample.jaxrs.page.dao.UserRepository"/>
+
+
+    <jaxrs:server id="services" address="/">
+        <jaxrs:serviceBeans>
+            <bean class="sample.jaxrs.basic.HelloWorld"/>
+            <bean class="sample.jaxrs.optional.HelloWorld"/>
+            <bean class="sample.jaxrs.verbs.UserResource">
+                <property name="users" ref="users"/>
+            </bean>
+            <bean class="sample.jaxrs.exmap.UserResource">
+                <property name="users" ref="exmap-users"/>
+            </bean>
+            <bean class="sample.jaxrs.page.UserResource">
+                <property name="users" ref="page-users"/>
+            </bean>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+            <bean class="sample.jaxrs.exmap.UserExceptionMapper"/>
+            <bean class="sample.jaxrs.page.PageWriter"/>
+            <!--<bean class="sample.jaxrs.security.AuthenticationHandler"/>-->
+        </jaxrs:providers>
+    </jaxrs:server>
+
+</beans>
